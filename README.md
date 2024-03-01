@@ -6,3 +6,4 @@ This is a procject we are creating to learn how to use express and node.js. In t
 # Commits
 - 0.0.1 - Initial commit that just has a working express server without any routes.
 - 0.0.2 - Change project layout to use a src folder.
+- 0.0.3 - Add simple routing to the project.

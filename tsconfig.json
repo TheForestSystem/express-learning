@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",                        /* Specify ECMAScript target version: 'es5', 'es6', 'es2015', 'es2016', 'es2017', 'es2018', 'es2019', 'es2020', or 'esnext'. */
-    "module": "commonjs",                   /* Specify module code generation: 'commonjs', 'amd', 'system', 'umd', 'es2015', 'es2020', or 'esnext'. */
-    "strict": true,                         /* Enable all strict type-checking options. */
-    "esModuleInterop": true,                /* Enable compatibility with code using ES module import syntax. */
-    "skipLibCheck": true,                   /* Skip type checking of declaration files. */
-    "forceConsistentCasingInFileNames": true /* Ensure that casing is consistent in file names. */
+    "outDir": "./dist",
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/**/*"],                  /* Specify files to be included in compilation. */
-  "exclude": ["node_modules"]               /* Specify files to be excluded from compilation. */
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
