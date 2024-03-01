@@ -5,6 +5,8 @@ import legalRoutes from './routes/LegalRoutes';
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
+
 app.use('/', homeRoutes);
 app.use('/legal', legalRoutes);
 
