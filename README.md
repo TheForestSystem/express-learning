@@ -9,3 +9,4 @@ This is a procject we are creating to learn how to use express and node.js. In t
 - 0.0.3 - Add simple routing to the project.
 - 0.0.4 - Add EJS templating to the project.
 - 0.1.4 - Chance styling to use bootstrap.
+- 0.0.5 - reading from a database and displaying it on the page.
