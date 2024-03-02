@@ -3,30 +3,28 @@
 <head>
     <%- include('../partials/head'); %>
 </head>
-<body class="container">
+<body>
 
-    <header>
+    <header class="container">
         <%- include('../partials/header'); %>
     </header>
 
-    <main>
+    <main class="container">
         <div class="jumbotron">
             <h1>Top Mascots</h1>
             <p><%= tagline %></p>
-            <ul>
+            <ul class="mascot-list">
                 <% mascots.forEach(function(mascot) { %>
-                    <li>
+                    <li class="mb-2">
                         <strong><%= mascot.name %></strong>
-                        representing <%= mascot.organization %>, born <%= mascot.birth_year %>
+                        representing <%= mascot.organization %>, born <%= mascot.birthYear %>
                     </li>
                 <% }); %>
             </ul>
         </div>
     </main>
 
-    <footer>
-        <%- include('../partials/footer'); %>
-    </footer>
+    <%- include('../partials/footer'); %>
 
 </body>
 </html>
