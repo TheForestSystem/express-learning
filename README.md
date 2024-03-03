@@ -12,3 +12,4 @@ This is a procject we are creating to learn how to use express and node.js. In t
 - 0.5.0 - reading from a database and displaying it on the page.
 - 0.6.0 - Add logging middleware to the project.
 - 0.7.0 - Add a form to the page to add new items to the database.
+- 0.7.1 - Add a debug route to the project with middleware to only allow access to localhost.

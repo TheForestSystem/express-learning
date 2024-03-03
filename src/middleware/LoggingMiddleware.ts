@@ -7,6 +7,7 @@ export default class LoggingMiddleware {
     static logRequest(req: Request, res: Response, next: NextFunction) {
         console.log(`--- Logging Request ---`)
         console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+        console.log(`[${new Date().toISOString()}] Request IP: ${req.ip}`);
         (req.body) ? console.log(`[${new Date().toISOString()}] Request Body: ${JSON.stringify(req.body)}`) : null;
         res.on('finish', () => {
             console.log(`[${new Date().toISOString()}] Response Status Code: ${res.statusCode}`);
