@@ -28,6 +28,21 @@ async function getMascots(): Promise<Mascot[]> {
   }
 }
 
+async function addMascot(mascot: Mascot): Promise<Mascot> {
+  try {
+    // Ensure that the property name matches the database column name ("birthYear")
+    return await mascotManager.addMascot({
+      name: mascot.name,
+      organization: mascot.organization,
+      birth_year: mascot.birth_year
+    });
+  } catch (error) {
+    console.error('Error occurred:', error);
+    throw error;
+  }
+}
+
+
 // Create a router
 const router = express.Router();
 
@@ -39,6 +54,26 @@ router.get('/', async (req: Request, res: Response) => {
   } catch (error) {
     console.error('Error occurred:', error);
     res.status(500).send('Internal Server Error'); // Handle errors
+  }
+});
+
+router.get('/add', (req: Request, res: Response) => {
+  res.render('pages/add');
+});
+
+router.post('/add', async (req: Request, res: Response) => {
+
+  const mascot: Mascot = {
+    name: req.body.name,
+    organization: req.body.organization,
+    birth_year: parseInt(req.body.birthYear, 10),
+  }
+  try {
+    await addMascot(mascot);
+    res.redirect('/');
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 

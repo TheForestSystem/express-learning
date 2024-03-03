@@ -6,6 +6,9 @@ import legalRoutes from './routes/LegalRoutes';
 import LoggingMiddleware from './middleware/LoggingMiddleware';
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const port = 3000;
 
 app.set('view engine', 'ejs');

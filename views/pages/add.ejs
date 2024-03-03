@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<body>
+
+    <header class="container">
+        <%- include('../partials/header'); %>
+    </header>
+
+    <main class="container">
+        <!-- Form to take in a name, org, and birth year of a mascot with bootstrap formatting -->
+
+        <div class="jumbotron">
+            <h1>Add a Mascot</h1>
+            <form action="/add" method="post">
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="organization" class="col-sm-2 col-form-label">Organization</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="organization" name="organization" placeholder="Organization">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="birthYear" class="col-sm-2 col-form-label">Birth Year</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="birthYear" name="birthYear" placeholder="Birth Year">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Add Mascot</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <%- include('../partials/footer'); %>
+
+</body>
+</html>

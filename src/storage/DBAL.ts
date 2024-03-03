@@ -1,8 +1,5 @@
 import { Pool, QueryResult } from 'pg';
 import DatabaseConfig from './DatabaseConfig';
-
-import Mascot from './models/mascots';
-
 export default class Database {
   private pool: Pool;
 
@@ -53,6 +50,7 @@ export default class Database {
     const values = Object.values(data);
     const placeholders = keys.map((_, index) => `$${index + 1}`).join(', ');
     const queryText = `INSERT INTO ${table} (${keys.join(', ')}) VALUES (${placeholders}) RETURNING *`;
+    console.debug('Query:', queryText, ":", values);
     const result = await this.query(queryText, values);
     return result[0];
   }
