@@ -1,22 +1,21 @@
+// ./src/routes/HomeRoutes.ts
+
 import express, { Request, Response } from 'express';
 import Mascot from '../storage/models/mascots';
-import Database from '../storage/DBAL';
 import MascotManager from '../storage/managers/MascotManager';
-import DatabaseConfig from '../storage/DatabaseConfig';
+
+import { globalDatabase } from '../middleware/DBConfigMiddleware';
 
 // Define tagline
 const tagline: string = 'No programming concept is complete without a cute animal mascot.';
 
-const config: DatabaseConfig = {
-  user: 'express',
-  host: 'localhost',
-  database: 'express',
-  password: 'express',
-  port: 5432,
-};
+if (!globalDatabase) {
+  throw new Error('Database not available');
+} 
+const mascotManager = new MascotManager(globalDatabase);
 
-const db = new Database(config);
-const mascotManager = new MascotManager(db);
+
+// Create a new instance of MascotManager with the database instance c
 
 // Define an asynchronous function to retrieve mascots
 async function getMascots(): Promise<Mascot[]> {
