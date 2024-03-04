@@ -1,7 +1,7 @@
 # Forest learning express.
 
 ## Description
-This is a procject we are creating to learn how to use express and node.js. In this exampme we'll be recrating rook.chat. Rook is a simple roleplaying platform that allows users to create and join starters.
+This is a project we are creating to learn how to use express and node.js. In this example we'll be recreating [Rook](https://rook.chat). Rook is a simple roleplaying platform that allows users to create and join starters.
 
 # Commits
 - 0.1.0 - Initial commit that just has a working express server without any routes.
@@ -13,3 +13,4 @@ This is a procject we are creating to learn how to use express and node.js. In t
 - 0.6.0 - Add logging middleware to the project.
 - 0.7.0 - Add a form to the page to add new items to the database.
 - 0.7.1 - Add a debug route to the project with middleware to only allow access to localhost.
+- 0.8.0 - Add a single connection pool for the entire project.

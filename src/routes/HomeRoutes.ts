@@ -1,10 +1,11 @@
 // ./src/routes/HomeRoutes.ts
 
 import express, { Request, Response } from 'express';
+
+import { globalDatabase } from '../storage/connect';
+
 import Mascot from '../storage/models/mascots';
 import MascotManager from '../storage/managers/MascotManager';
-
-import { globalDatabase } from '../middleware/DBConfigMiddleware';
 
 // Define tagline
 const tagline: string = 'No programming concept is complete without a cute animal mascot.';
