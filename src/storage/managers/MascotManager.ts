@@ -48,9 +48,7 @@ export default class MascotManager extends ManagerTemplate<Mascot>{
    * @async
    */
   async getByOrganization(organization: string): Promise<Mascot[]> {
-    const {where, params} = this.db.buildWhereClause({organization});
-    const queryText = `SELECT * FROM ${this.TABLE_NAME} WHERE ${where}`;
-    return this.db.query(queryText, params);
+    return this.db.query(`SELECT * FROM ${this.TABLE_NAME} WHERE organization = $1`, [organization]);
   }
 
   async getById(id: number): Promise<Mascot | null> {

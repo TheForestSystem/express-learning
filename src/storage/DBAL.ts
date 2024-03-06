@@ -32,10 +32,11 @@ export default class Database {
    * @async
    */
   async findOne(table: string, conditions: Record<string, any>): Promise<any | null> {
-    const { where, params } = this.buildWhereClause(conditions);
-    const queryText = `SELECT * FROM ${table} WHERE ${where} LIMIT 1`;
-    const result = await this.query(queryText, params);
-    return result.length > 0 ? result[0] : null;
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const queryText = `SELECT * FROM ${table} WHERE ${key} = $1 LIMIT 1`;
+    const result = await this.query(queryText, [value]);
+    return result[0] || null;
   }
 
   /**
@@ -65,27 +66,16 @@ export default class Database {
    * @example await db.update('mascots', { name: 'John' }, { name: 'Johnny' });
    */
   async update(table: string, conditions: Record<string, any>, data: Record<string, any>): Promise<any[]> {
-    const { where, params } = this.buildWhereClause(conditions);
-    
-    // Generate SET clause
-    const setClause = Object.keys(data).map((key, index) => `${key} = $${index + 1}`).join(', ');
-
-    // Calculate the starting index for parameters in the WHERE clause
-    const setParamsCount = Object.keys(data).length;
-    const whereParams = params.map((_, index) => `$${setParamsCount + index + 1}`).join(' AND ');
-
-    // Construct the query
-    const queryText = `UPDATE ${table} SET ${setClause} WHERE ${whereParams} RETURNING *`;
-
-    // Combine parameters for SET and WHERE clauses
-    const allParams = [...Object.values(data), ...params];
-
-    console.debug('Query:', queryText, ":", allParams);
-    
-    // Execute the query
-    const result = await this.query(queryText, allParams);
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+    const queryText = `UPDATE ${table} SET ${setClause} WHERE ${key} = $${keys.length + 1} RETURNING *`;
+    console.debug('Query:', queryText, ":", [...values, value]);
+    const result = await this.query(queryText, [...values, value]);
     return result;
-}
+  }
 
 
 
@@ -96,22 +86,9 @@ export default class Database {
    * @async
    */
   async delete(table: string, conditions: Record<string, any>): Promise<void> {
-    const { where, params } = this.buildWhereClause(conditions);
-    const queryText = `DELETE FROM ${table} WHERE ${where} RETURNING *`;
-    const result = await this.query(queryText, params);
-  }
-
-  /**
-   * Builds a WHERE clause for a SQL query
-   * @param {Record<string, any>} conditions - Search conditions
-   * @returns {{ where: string; params: any[] }} - WHERE clause and parameters
-   * @private
-   * @example const { where, params } = this.buildWhereClause({ id: 1, name: 'John' });
-   */
-  buildWhereClause(conditions: Record<string, any>): { where: string; params: any[] } {
-    const keys = Object.keys(conditions);
-    const where = keys.map((key, index) => `${key} = $${index + 1}`).join(' AND ');
-    const params = keys.map((key) => conditions[key]);
-    return { where, params };
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const queryText = `DELETE FROM ${table} WHERE ${key} = $1`;
+    await this.query(queryText, [value]);
   }
 }
