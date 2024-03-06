@@ -1,11 +1,14 @@
 import Database from "../DBAL";
 import Mascot from "../models/mascots";
 
-export default class MascotManager {
-  private readonly TABLE_NAME = 'mascots';
-  private readonly db: Database;
+import ManagerTemplate from "./ManagerTemplate";
+
+export default class MascotManager extends ManagerTemplate<Mascot>{
+  protected readonly TABLE_NAME = 'mascots';
+  protected readonly db: Database;
 
   constructor(db: Database) {
+    super(db, 'mascots');
     this.db = db;
   }
 
@@ -25,7 +28,7 @@ export default class MascotManager {
    * @returns {Promise<Mascot>} - The added mascot
    * @async
    */
-  async addMascot(mascot: Mascot): Promise<Mascot> {
+  async insert(mascot: Mascot): Promise<Mascot> {
     return this.db.insert(this.TABLE_NAME, mascot);
   }
 
@@ -48,5 +51,22 @@ export default class MascotManager {
     const {where, params} = this.db.buildWhereClause({organization});
     const queryText = `SELECT * FROM ${this.TABLE_NAME} WHERE ${where}`;
     return this.db.query(queryText, params);
+  }
+
+  async getById(id: number): Promise<Mascot | null> {
+    return this.db.findOne(this.TABLE_NAME, {mascot_id: id});
+  }
+
+  async update(mascot: Mascot): Promise<Mascot> {
+    const result = await this.db.update(this.TABLE_NAME, {mascot_id: mascot.mascot_id}, {
+      name: mascot.name,
+      organization: mascot.organization,
+      birth_year: mascot.birth_year
+    });
+    return (result as Mascot[])[0];
+  }
+
+  async delete(id: number): Promise<void> {
+    this.db.delete(this.TABLE_NAME, {mascot_id: id});
   }
 }

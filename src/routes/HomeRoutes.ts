@@ -30,8 +30,7 @@ async function getMascots(): Promise<Mascot[]> {
 
 async function addMascot(mascot: Mascot): Promise<Mascot> {
   try {
-    // Ensure that the property name matches the database column name ("birthYear")
-    return await mascotManager.addMascot({
+    return await mascotManager.insert({
       name: mascot.name,
       organization: mascot.organization,
       birth_year: mascot.birth_year

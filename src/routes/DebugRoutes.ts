@@ -1,5 +1,9 @@
 import express, { Request, Response } from 'express';
 import { hashPassword, verifyPassword } from '../auth/password';
+import MascotManager from '../storage/managers/MascotManager';
+import Mascot from '../storage/models/mascots';
+
+import { globalDatabase } from '../storage/connect';
 
 function makeEmail(): string {
   const domains: String[] = [
@@ -13,6 +17,21 @@ function makeEmail(): string {
   const randomString = Math.random().toString(36).substring(2, 15);
   const randomDomain = domains[Math.floor(Math.random() * domains.length)];
   return `${randomString}@${randomDomain}`;
+}
+
+async function updateMascotYear(mascot: Mascot, year: number): Promise<Mascot> {
+  if (!globalDatabase) {
+    throw new Error('Database not available');
+  } 
+  const mascotManager = new MascotManager(globalDatabase);
+
+  try {
+    mascot.birth_year = year;
+    return await mascotManager.update(mascot);
+  } catch (error) {
+    console.error('Error occurred:', error);
+    throw error;
+  }
 }
 
 const router = express.Router();
@@ -42,6 +61,33 @@ router.get('/make-email/:count', (req: Request, res: Response) => {
   res.json({
     "emails": emails
   });
+});
+
+
+router.get('/update-mascot-year/:id/:year', async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id, 10);
+  const year = parseInt(req.params.year, 10);
+  if (isNaN(id) || isNaN(year)) {
+    res.status(400).json({ "error": "Invalid ID or year" });
+    return;
+  }
+  if (!globalDatabase) {
+    throw new Error('Database not available');
+  } 
+  const mascotManager = new MascotManager(globalDatabase);
+
+  try {
+    const mascot = await mascotManager.getById(id);
+    if (!mascot) {
+      res.status(404).json({ "error": "Mascot not found" });
+      return;
+    }
+    const updatedMascot = await updateMascotYear(mascot, year);
+    res.json(updatedMascot);
+  } catch (error) {
+    console.error('Error occurred:', error);
+    res.status(500).json({ "error": "Internal Server Error" });
+  }
 });
 
 

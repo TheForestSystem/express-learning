@@ -62,27 +62,43 @@ export default class Database {
    * @param {Record<string, any>} data - New row data
    * @returns {Promise<any[]>} - The updated rows
    * @async
+   * @example await db.update('mascots', { name: 'John' }, { name: 'Johnny' });
    */
   async update(table: string, conditions: Record<string, any>, data: Record<string, any>): Promise<any[]> {
     const { where, params } = this.buildWhereClause(conditions);
-    const set = Object.keys(data).map((key, index) => `${key} = $${index + 1}`).join(', ');
-    const queryText = `UPDATE ${table} SET ${set} WHERE ${where} RETURNING *`;
-    const result = await this.query(queryText, [...Object.values(data), ...params]);
+    
+    // Generate SET clause
+    const setClause = Object.keys(data).map((key, index) => `${key} = $${index + 1}`).join(', ');
+
+    // Calculate the starting index for parameters in the WHERE clause
+    const setParamsCount = Object.keys(data).length;
+    const whereParams = params.map((_, index) => `$${setParamsCount + index + 1}`).join(' AND ');
+
+    // Construct the query
+    const queryText = `UPDATE ${table} SET ${setClause} WHERE ${whereParams} RETURNING *`;
+
+    // Combine parameters for SET and WHERE clauses
+    const allParams = [...Object.values(data), ...params];
+
+    console.debug('Query:', queryText, ":", allParams);
+    
+    // Execute the query
+    const result = await this.query(queryText, allParams);
     return result;
-  }
+}
+
+
 
   /**
    * DELETE rows from a table
    * @param {string} table - Table name
    * @param {Record<string, any>} conditions - Search conditions
-   * @returns {Promise<any[]>} - The deleted rows
    * @async
    */
-  async delete(table: string, conditions: Record<string, any>): Promise<any[]> {
+  async delete(table: string, conditions: Record<string, any>): Promise<void> {
     const { where, params } = this.buildWhereClause(conditions);
     const queryText = `DELETE FROM ${table} WHERE ${where} RETURNING *`;
     const result = await this.query(queryText, params);
-    return result;
   }
 
   /**
