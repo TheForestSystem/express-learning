@@ -5,6 +5,12 @@ import Mascot from '../storage/models/mascots';
 
 import { globalDatabase } from '../storage/connect';
 
+/**
+ * Make a random email address for testing
+ * @method makeEmail
+ * @returns {string} - A random email address
+ * @author ForestSystem
+ */
 function makeEmail(): string {
   const domains: String[] = [
     "gmail.com",
@@ -19,6 +25,15 @@ function makeEmail(): string {
   return `${randomString}@${randomDomain}`;
 }
 
+/**
+ * Update the birth year of a mascot
+ * @async
+ * @method updateMascotYear
+ * @param {Mascot} mascot - The mascot to update
+ * @param {number} year - The new birth year
+ * @returns {Promise<Mascot>} - The updated mascot
+ * @throws {Error} - Throws an error if the database is not available
+ */
 async function updateMascotYear(mascot: Mascot, year: number): Promise<Mascot> {
   if (!globalDatabase) {
     throw new Error('Database not available');

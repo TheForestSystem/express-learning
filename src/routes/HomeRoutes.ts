@@ -12,16 +12,21 @@ const tagline: string = 'No programming concept is complete without a cute anima
 
 if (!globalDatabase) {
   throw new Error('Database not available');
-} 
+}
 const mascotManager = new MascotManager(globalDatabase);
 
 
-// Create a new instance of MascotManager with the database instance c
-
-// Define an asynchronous function to retrieve mascots
+/**
+ * Get all mascots and sort them by birth year
+ * @async
+ * @method getMascots
+ * @returns {Promise<Mascot[]>} - All mascots, sorted by birth year
+ * @throws {Error} - Throws an error if the database is not available
+ * @author ForestSystem
+ */
 async function getMascots(): Promise<Mascot[]> {
   try {
-    let mascots =  await mascotManager.getAllMascots(); // Await the result of getAllMascots
+    let mascots = await mascotManager.getAllMascots(); // Await the result of getAllMascots
     mascots.sort((a, b) => a.birth_year - b.birth_year);
     return mascots;
   } catch (error) {
@@ -30,6 +35,15 @@ async function getMascots(): Promise<Mascot[]> {
   }
 }
 
+/**
+ * Add a mascot to the database
+ * @async
+ * @method addMascot
+ * @param {Mascot} mascot - The mascot to add
+ * @returns {Promise<Mascot>} - The added mascot
+ * @throws {Error} - Throws an error if the database is not available
+ * @author ForestSystem
+ */
 async function addMascot(mascot: Mascot): Promise<Mascot> {
   try {
     return await mascotManager.insert({

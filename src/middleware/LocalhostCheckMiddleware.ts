@@ -9,6 +9,15 @@ export default class LocalhostCheckMiddleware {
         '::1'
     ];
 
+    /**
+     * Check if the request is coming from localhost or an internal network
+     * @method checkLocalhost
+     * @param {Request} req - The request object
+     * @param {Response} res - The response object
+     * @param {NextFunction} next - The next function
+     * @returns {void}
+     * @author ForestSystem
+     */
     static checkLocalhost(req: Request, res: Response, next: NextFunction) {
         const ip = req.ip ?? ''; // Provide a default value if req.ip is undefined
         // Check if the request is coming from a value in the allowedIps array (checking for wildcard *)

@@ -3,6 +3,13 @@ import DatabaseConfig from "./DatabaseConfig";
 
 let globalDatabase: Database | null = null; // Module-level variable to store the database instance
 
+/**
+ * Get the database configuration from environment variables
+ * @method getDatabaseConfig
+ * @returns {DatabaseConfig} - The database configuration
+ * @throws {Error} - Throws an error if the configuration is incomplete or invalid
+ * @author ForestSystem
+ */
 function getDatabaseConfig(): DatabaseConfig {
     console.log('--- Retrieving Database Configuration ---');
     const user = process.env.DB_USER || '';
@@ -26,6 +33,12 @@ function getDatabaseConfig(): DatabaseConfig {
     };
 }
 
+/**
+ * Connect to the database
+ * @method connect
+ * @returns {Database} - The database instance
+ * @author ForestSystem
+ */
 function connect(): Database {
     if (globalDatabase) {
         return globalDatabase;
