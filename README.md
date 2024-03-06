@@ -14,3 +14,4 @@ This is a project we are creating to learn how to use express and node.js. In th
 - 0.7.0 - Add a form to the page to add new items to the database.
 - 0.7.1 - Add a debug route to the project with middleware to only allow access to localhost.
 - 0.8.0 - Add a single connection pool for the entire project.
+- 0.9.0 - Added documentation to the project.
