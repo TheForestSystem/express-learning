@@ -32,10 +32,11 @@ export default class Database {
    * @async
    */
   async findOne(table: string, conditions: Record<string, any>): Promise<any | null> {
-    const { where, params } = this.buildWhereClause(conditions);
-    const queryText = `SELECT * FROM ${table} WHERE ${where} LIMIT 1`;
-    const result = await this.query(queryText, params);
-    return result.length > 0 ? result[0] : null;
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const queryText = `SELECT * FROM ${table} WHERE ${key} = $1 LIMIT 1`;
+    const result = await this.query(queryText, [value]);
+    return result[0] || null;
   }
 
   /**
@@ -62,40 +63,32 @@ export default class Database {
    * @param {Record<string, any>} data - New row data
    * @returns {Promise<any[]>} - The updated rows
    * @async
+   * @example await db.update('mascots', { name: 'John' }, { name: 'Johnny' });
    */
   async update(table: string, conditions: Record<string, any>, data: Record<string, any>): Promise<any[]> {
-    const { where, params } = this.buildWhereClause(conditions);
-    const set = Object.keys(data).map((key, index) => `${key} = $${index + 1}`).join(', ');
-    const queryText = `UPDATE ${table} SET ${set} WHERE ${where} RETURNING *`;
-    const result = await this.query(queryText, [...Object.values(data), ...params]);
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+    const setClause = keys.map((key, index) => `${key} = $${index + 1}`).join(', ');
+    const queryText = `UPDATE ${table} SET ${setClause} WHERE ${key} = $${keys.length + 1} RETURNING *`;
+    console.debug('Query:', queryText, ":", [...values, value]);
+    const result = await this.query(queryText, [...values, value]);
     return result;
   }
+
+
 
   /**
    * DELETE rows from a table
    * @param {string} table - Table name
    * @param {Record<string, any>} conditions - Search conditions
-   * @returns {Promise<any[]>} - The deleted rows
    * @async
    */
-  async delete(table: string, conditions: Record<string, any>): Promise<any[]> {
-    const { where, params } = this.buildWhereClause(conditions);
-    const queryText = `DELETE FROM ${table} WHERE ${where} RETURNING *`;
-    const result = await this.query(queryText, params);
-    return result;
-  }
-
-  /**
-   * Builds a WHERE clause for a SQL query
-   * @param {Record<string, any>} conditions - Search conditions
-   * @returns {{ where: string; params: any[] }} - WHERE clause and parameters
-   * @private
-   * @example const { where, params } = this.buildWhereClause({ id: 1, name: 'John' });
-   */
-  buildWhereClause(conditions: Record<string, any>): { where: string; params: any[] } {
-    const keys = Object.keys(conditions);
-    const where = keys.map((key, index) => `${key} = $${index + 1}`).join(' AND ');
-    const params = keys.map((key) => conditions[key]);
-    return { where, params };
+  async delete(table: string, conditions: Record<string, any>): Promise<void> {
+    const key = Object.keys(conditions)[0];
+    const value = conditions[key];
+    const queryText = `DELETE FROM ${table} WHERE ${key} = $1`;
+    await this.query(queryText, [value]);
   }
 }
