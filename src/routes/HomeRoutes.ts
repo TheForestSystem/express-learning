@@ -21,7 +21,9 @@ const mascotManager = new MascotManager(globalDatabase);
 // Define an asynchronous function to retrieve mascots
 async function getMascots(): Promise<Mascot[]> {
   try {
-    return await mascotManager.getAllMascots(); // Await the result of getAllMascots
+    let mascots =  await mascotManager.getAllMascots(); // Await the result of getAllMascots
+    mascots.sort((a, b) => a.birth_year - b.birth_year);
+    return mascots;
   } catch (error) {
     console.error('Error occurred:', error);
     return []; // Return empty array in case of error
